@@ -7,6 +7,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
 
+
 class TestAddingGroup2(unittest.TestCase):
     def setUp(self):
         self.wd = webdriver.Firefox()
@@ -44,7 +45,6 @@ class TestAddingGroup2(unittest.TestCase):
     
     def tearDown(self):
         self.wd.quit()
-        self.assertEqual([], self.verificationErrors)
 
 if __name__ == "__main__":
     unittest.main()
