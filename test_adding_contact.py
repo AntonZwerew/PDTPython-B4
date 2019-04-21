@@ -109,11 +109,17 @@ class TestAddingContact(unittest.TestCase):
                       "++7788000055555533553355", "vanya@fsb.ru", "ivan@kgb.su", "Ivanych@ivan.ivan", "google.ru", "15",
                       "November", "2001", "13", "November", "1999", "NewGroup", "AaddrreesS", "Yjme",
                       "NOasdkalsdjhlkasjgdflhajgdshsjld!")
-        contact_empty = Contact("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                      "", "", "", "")
         self.open_main_page(wd)
         self.login(wd, "admin", "secret")
         self.add_user(wd, contact_vanya)
+        self.logout(wd)
+
+    def test_addin_gempy_contact(self): #Этот тест падает
+        wd = self.wd
+        contact_empty = Contact("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+                                "", "", "", "")
+        self.open_main_page(wd)
+        self.login(wd, "admin", "secret")
         self.add_user(wd, contact_empty)
         self.logout(wd)
 
