@@ -1,26 +1,16 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
-import unittest, time, re
+import unittest
 
 class TestAddingContact(unittest.TestCase):
     def setUp(self):
         self.wd = webdriver.Firefox()
         self.wd.implicitly_wait(30)
 
-    def test_adding_contact(self):
-        wd = self.wd
-        wd.get("http://localhost/addressbook/")
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys("admin")
-        wd.find_element_by_name("pass").click()
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys("secret")
-        wd.find_element_by_xpath("//input[@value='Login']").click()
+    def add_user(self, wd):
         wd.find_element_by_link_text("add new").click()
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -34,9 +24,9 @@ class TestAddingContact(unittest.TestCase):
         wd.find_element_by_name("nickname").click()
         wd.find_element_by_name("nickname").clear()
         wd.find_element_by_name("nickname").send_keys("Vanya")
-        #2 строчки закомментировал, т.к. если их оставить - тест падает, по идее оставшееся эквивалентно перетаскиванию
-        #wd.find_element_by_xpath("//input[7]").click()
-        #wd.find_element_by_xpath("//input[7]").clear()
+        # закомментировал клик, т.к. если их оставить - тест падает, по идее оставшееся эквивалентно перетаскиванию
+        # wd.find_element_by_xpath("//input[7]").click()
+        wd.find_element_by_xpath("//input[7]").clear()
         wd.find_element_by_xpath("//input[7]").send_keys("C:\\xampp\htdocs\\addressbook\\title.gif")
         wd.find_element_by_name("title").click()
         wd.find_element_by_name("title").clear()
@@ -91,7 +81,8 @@ class TestAddingContact(unittest.TestCase):
         wd.find_element_by_name("ayear").send_keys("1999")
         wd.find_element_by_name("new_group").click()
         Select(wd.find_element_by_name("new_group")).select_by_visible_text("NewGroup")
-        wd.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Group:'])[1]/following::option[20]").click()
+        wd.find_element_by_xpath(
+            "(.//*[normalize-space(text()) and normalize-space(.)='Group:'])[1]/following::option[20]").click()
         wd.find_element_by_name("address2").click()
         wd.find_element_by_name("address2").clear()
         wd.find_element_by_name("address2").send_keys("AaddrreesS")
@@ -101,9 +92,30 @@ class TestAddingContact(unittest.TestCase):
         wd.find_element_by_name("notes").click()
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys("NOasdkalsdjhlkasjgdflhajgdshsjld!")
-        wd.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Notes:'])[1]/following::input[1]").click()
+        wd.find_element_by_xpath(
+            "(.//*[normalize-space(text()) and normalize-space(.)='Notes:'])[1]/following::input[1]").click()
+
+    def logout(self, wd):
         wd.find_element_by_link_text("Logout").click()
-    
+
+    def login(self, wd):
+        wd.find_element_by_name("user").clear()
+        wd.find_element_by_name("user").send_keys("admin")
+        wd.find_element_by_name("pass").click()
+        wd.find_element_by_name("pass").clear()
+        wd.find_element_by_name("pass").send_keys("secret")
+        wd.find_element_by_xpath("//input[@value='Login']").click()
+
+    def open_main_page(self, wd):
+        wd.get("http://localhost/addressbook/")
+
+    def test_adding_contact(self):
+        wd = self.wd
+        self.open_main_page(wd)
+        self.login(wd)
+        self.add_user(wd)
+        self.logout(wd)
+
     def is_element_present(self, how, what):
         try: self.wd.find_element(by=how, value=what)
         except NoSuchElementException as e: return False
