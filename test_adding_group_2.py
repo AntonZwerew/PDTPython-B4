@@ -10,20 +10,16 @@ class TestAddingGroup2(unittest.TestCase):
         self.wd = webdriver.Firefox()
         self.wd.implicitly_wait(30)
 
-    def open_main_page(self, wd):
-        wd.get("http://localhost/addressbook/group.php")
-
     def login(self, wd, username, password):
+        wd.get("http://localhost/addressbook/group.php")
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys(username)
         wd.find_element_by_name("pass").clear()
         wd.find_element_by_name("pass").send_keys(password)
         wd.find_element_by_xpath("//input[@value='Login']").click()
 
-    def open_groups_page(self, wd):
-        wd.find_element_by_name("new").click()
-
     def submit_group(self, wd, group):
+        wd.find_element_by_name("new").click()
         # Заполняем форму новой группы
         wd.find_element_by_name("group_name").click()
         wd.find_element_by_name("group_name").clear()
@@ -34,8 +30,6 @@ class TestAddingGroup2(unittest.TestCase):
         wd.find_element_by_name("group_footer").send_keys(group.footer)
         # Отправляем форму группы
         wd.find_element_by_name("submit").click()
-
-    def return_to_group_page(self, wd):
         wd.find_element_by_link_text("group page").click()
 
     def logout(self, wd):
@@ -49,7 +43,6 @@ class TestAddingGroup2(unittest.TestCase):
     def test_adding_group(self):
         wd = self.wd
         group = Group("Name1", "Header1", "Footer1")
-        self.open_main_page(wd)
         self.login(wd, username="admin", password="secret")
         self.create_group(wd, group)
         self.logout(wd)
@@ -57,7 +50,6 @@ class TestAddingGroup2(unittest.TestCase):
     def test_adding_empty_group(self):
         wd = self.wd
         emtpy_group = Group("", "", "")
-        self.open_main_page(wd)
         self.login(wd, username="admin", password="secret")
         self.create_group(wd, emtpy_group)
         self.logout(wd)
