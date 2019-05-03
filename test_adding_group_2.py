@@ -36,9 +36,7 @@ class TestAddingGroup2(unittest.TestCase):
         wd.find_element_by_link_text("Logout").click()
 
     def create_group(self, wd, group):
-        self.open_groups_page(wd)
         self.submit_group(wd,group)
-        self.return_to_group_page(wd)
 
     def test_adding_group(self):
         wd = self.wd
