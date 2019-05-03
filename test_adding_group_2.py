@@ -18,8 +18,7 @@ class TestAddingGroup2(unittest.TestCase):
         wd.find_element_by_name("user").send_keys(username)
         wd.find_element_by_name("pass").clear()
         wd.find_element_by_name("pass").send_keys(password)
-        wd.find_element_by_xpath(
-            "(.//*[normalize-space(text()) and normalize-space(.)='Password:'])[1]/following::input[2]").click()
+        wd.find_element_by_xpath("//input[@value='Login']").click()
 
     def open_groups_page(self, wd):
         wd.find_element_by_name("new").click()
