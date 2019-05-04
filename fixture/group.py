@@ -15,11 +15,22 @@ class GroupHelper:
         wd.find_element_by_name("group_footer").send_keys(group.footer)
         # Отправляем форму группы
         wd.find_element_by_name("submit").click()
-        wd.find_element_by_link_text("group page").click()
+        self.open_group_page()
 
 
     def create(self, group):
         wd = self.app.wd
-        wd.get("http://localhost/addressbook/group.php")
+        self.open_group_page()
         self.submit_group(group)
 
+    def open_group_page(self):
+        wd = self.app.wd
+        wd.find_element_by_link_text("groups").click()
+
+    def delete_first(self):
+        wd = self.app.wd
+        self.open_group_page()
+        #Отмечаем первую группу
+        wd.find_element_by_name("selected[]").click()
+        #Удаляем отмеченную группу
+        wd.find_element_by_name("delete").click()

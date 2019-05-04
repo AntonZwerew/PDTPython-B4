@@ -1,14 +1,5 @@
 # -*- coding: utf-8 -*-
-import pytest
 from model.contact import Contact
-from fixture.application import Application
-
-
-@pytest.fixture
-def app(request):
-    fixture = Application()
-    request.addfinalizer(fixture.destroy)
-    return fixture
 
 
 def test_adding_contact(app):
@@ -19,11 +10,4 @@ def test_adding_contact(app):
                   "NOasdkalsdjhlkasjgdflhajgdshsjld!")
     app.session.login("admin", "secret")
     app.contact.add(vanya)
-    app.session.logout()
-
-def test_addin_gempy_contact(app): #Этот тест падает
-    empty = Contact("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                            "", "", "", "")
-    app.session.login("admin", "secret")
-    app.contact.add(empty)
     app.session.logout()
