@@ -1,20 +1,20 @@
-# -*- coding: utf-8 -*-
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
-import unittest
-from contact import Contact
 
-class TestAddingContact(unittest.TestCase):
-    def setUp(self):
+
+class Application:
+
+    def __init__(self):
         self.wd = webdriver.Firefox()
         self.wd.implicitly_wait(30)
 
-    def logout(self, wd):
+    def logout(self):
+        wd = self.wd
         wd.find_element_by_link_text("Logout").click()
 
-    def login(self, wd, user, password):
+    def login(self, user, password):
+        wd = self.wd
+        wd.get("http://localhost/addressbook/")
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys(user)
         wd.find_element_by_name("pass").click()
@@ -22,10 +22,8 @@ class TestAddingContact(unittest.TestCase):
         wd.find_element_by_name("pass").send_keys(password)
         wd.find_element_by_xpath("//input[@value='Login']").click()
 
-    def open_main_page(self, wd):
-        wd.get("http://localhost/addressbook/")
-
-    def add_user(self, wd, contact):
+    def add_user(self, contact):
+        wd = self.wd
         wd.find_element_by_link_text("add new").click()
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -102,39 +100,5 @@ class TestAddingContact(unittest.TestCase):
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys(contact.notes)
 
-    def test_adding_contact(self):
-        wd = self.wd
-        contact_vanya = Contact("Ivan", "Ivanovich", "Ivanov", "Vanya", "C:\\xampp\htdocs\\addressbook\\title.gif", "Title",
-                      "Microsoft", "Moscow, Kursky rail terminal", "8-800-555-35-35", "89855553535", "+7(800)555-35-35",
-                      "++7788000055555533553355", "vanya@fsb.ru", "ivan@kgb.su", "Ivanych@ivan.ivan", "google.ru", "15",
-                      "November", "2001", "13", "November", "1999", "NewGroup", "AaddrreesS", "Yjme",
-                      "NOasdkalsdjhlkasjgdflhajgdshsjld!")
-        self.open_main_page(wd)
-        self.login(wd, "admin", "secret")
-        self.add_user(wd, contact_vanya)
-        self.logout(wd)
-
-    def test_addin_gempy_contact(self): #Этот тест падает
-        wd = self.wd
-        contact_empty = Contact("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-                                "", "", "", "")
-        self.open_main_page(wd)
-        self.login(wd, "admin", "secret")
-        self.add_user(wd, contact_empty)
-        self.logout(wd)
-
-    def is_element_present(self, how, what):
-        try: self.wd.find_element(by=how, value=what)
-        except NoSuchElementException as e: return False
-        return True
-    
-    def is_alert_present(self):
-        try: self.wd.switch_to_alert()
-        except NoAlertPresentException as e: return False
-        return True
-    
-    def tearDown(self):
+    def destroy(self):
         self.wd.quit()
-
-if __name__ == "__main__":
-    unittest.main()
