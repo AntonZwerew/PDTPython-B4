@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from group import Group
-from application_group import Application
+from model.group import Group
+from fixture.application_group import Application
 import pytest
 
 
@@ -14,13 +14,13 @@ def app(request):
 
 def test_adding_group(app):
     group = Group("Name1", "Header1", "Footer1")
-    app.login(username="admin", password="secret")
-    app.create_group(group)
-    app.logout()
+    app.session.login(username="admin", password="secret")
+    app.group.create(group)
+    app.session.logout()
 
 
 def test_adding_empty_group(app):
     emtpy_group = Group("", "", "")
-    app.login(username="admin", password="secret")
-    app.create_group(emtpy_group)
-    app.logout()
+    app.session.login(username="admin", password="secret")
+    app.group.create(emtpy_group)
+    app.session.logout()
