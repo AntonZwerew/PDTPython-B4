@@ -8,7 +8,6 @@ class Application:
 
     def login(self, username, password):
         wd = self.wd
-        #wd.get("http://localhost/addressbook/group.php")
         wd.get("http://localhost/addressbook/")
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys(username)
@@ -37,6 +36,7 @@ class Application:
 
     def create_group(self, group):
         wd = self.wd
+        wd.get("http://localhost/addressbook/group.php")
         self.submit_group(group)
 
     def destroy(self):
