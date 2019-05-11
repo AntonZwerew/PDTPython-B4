@@ -50,7 +50,7 @@ class GroupHelper:
     def delete_first(self):
         wd = self.app.wd
         self.open_group_page()
-        #Отмечаем первую группу
+        # Отмечаем первую группу
         wd.find_element_by_name("selected[]").click()
-        #Удаляем отмеченную группу
+        # Удаляем отмеченную группу
         wd.find_element_by_name("delete").click()

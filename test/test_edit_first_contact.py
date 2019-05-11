@@ -8,6 +8,4 @@ def test_adding_contact(app):
                     "++7788000099999999999999", "petya@fsb.ru", "Petr@kgb.su", "petrovich@petr.petr", "yandex.io", "16",
                     "December", "1999", "15", "December", "2000", "Name2", "Adrees", "hfh",
                     "jdjfjfjkafj!")
-    app.session.login("admin", "secret")
     app.contact.edit_first(edited_contact)
-    app.session.logout()

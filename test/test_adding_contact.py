@@ -8,6 +8,4 @@ def test_adding_contact(app):
                   "++7788000055555533553355", "vanya@fsb.ru", "ivan@kgb.su", "Ivanych@ivan.ivan", "google.ru", "15",
                   "November", "2001", "13", "November", "1999", "Name1", "AaddrreesS", "Yjme",
                   "NOasdkalsdjhlkasjgdflhajgdshsjld!")
-    app.session.login("admin", "secret")
     app.contact.add(vanya)
-    app.session.logout()
