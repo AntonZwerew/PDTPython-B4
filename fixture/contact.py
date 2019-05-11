@@ -1,4 +1,5 @@
 from selenium.webdriver.support.ui import Select
+from model.contact import Contact
 
 
 class ContactHelper:
@@ -93,6 +94,7 @@ class ContactHelper:
     def delete_first(self):
         wd = self.app.wd
         self.open_main_page()
+        self.create_if_none()
         wd.find_element_by_name("selected[]").click()
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
@@ -100,6 +102,7 @@ class ContactHelper:
     def edit_first(self, contact):
         wd = self.app.wd
         self.open_main_page()
+        self.create_if_none()
         wd.find_element_by_xpath("//img[@alt='Edit']").click()
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -176,3 +179,18 @@ class ContactHelper:
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys(contact.notes)
         wd.find_element_by_name("update").click()
+
+    def count(self):
+        wd = self.app.wd
+        self.open_main_page()
+        return len(wd.find_elements_by_name("selected[]"))
+
+    def create_if_none(self):
+        vanya = Contact("Ivan", "Ivanovich", "Ivanov", "Vanya", "/opt/lampp/htdocs/addressbook/title.gif", "Title",
+                        "Microsoft", "Moscow, Kursky rail terminal", "8-800-555-35-35", "89855553535", "+7(800)555-35-35",
+                        "++7788000055555533553355", "vanya@fsb.ru", "ivan@kgb.su", "Ivanych@ivan.ivan", "google.ru", "15",
+                        "November", "2001", "13", "November", "1999", "[none]", "AaddrreesS", "Yjme",
+                        "NOasdkalsdjhlkasjgdflhajgdshsjld!")
+        if self.count() == 0:
+            self.add(vanya)
+

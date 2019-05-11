@@ -1,3 +1,6 @@
+from model.group import Group
+
+
 class GroupHelper:
     def __init__(self, app):
         self.app = app
@@ -41,6 +44,7 @@ class GroupHelper:
 
     def edit_first(self, group):
         self.open_group_page()
+        self.create_if_none()
         self.edit_group(group)
 
     def open_group_page(self):
@@ -50,7 +54,17 @@ class GroupHelper:
     def delete_first(self):
         wd = self.app.wd
         self.open_group_page()
+        self.create_if_none()
         # Отмечаем первую группу
         wd.find_element_by_name("selected[]").click()
         # Удаляем отмеченную группу
         wd.find_element_by_name("delete").click()
+
+    def count(self):
+        wd = self.app.wd
+        self.open_group_page()
+        return len(wd.find_elements_by_name("selected[]"))
+
+    def create_if_none(self):
+        if self.count() == 0:
+            self.submit_group(Group(name="test", header="test", footer="test"))
