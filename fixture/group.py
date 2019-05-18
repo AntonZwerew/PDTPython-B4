@@ -7,33 +7,27 @@ class GroupHelper:
 
     def submit_group(self, group):
         wd = self.app.wd
+        filler = self.app.filler
         wd.find_element_by_name("new").click()
         # Заполняем форму новой группы
-        wd.find_element_by_name("group_name").click()
-        wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(group.name)
-        wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys(group.header)
-        wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys(group.footer)
+        filler.fill_input_field(element="group_name", text=group.name)
+        filler.fill_input_field(element="group_header", text=group.header)
+        filler.fill_input_field(element="group_footer", text=group.footer)
         # Отправляем форму группы
         wd.find_element_by_name("submit").click()
         self.open_group_page()
 
     def edit_group(self, group):
         wd = self.app.wd
+        filler = self.app.filler
         # Выбираем первую группу
         wd.find_element_by_name("selected[]").click()
         # Жмем на кнопку "редактировать"
         wd.find_element_by_name("edit").click()
         # Заполняем форму новой группы
-        wd.find_element_by_name("group_name").click()
-        wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(group.name)
-        wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys(group.header)
-        wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys(group.footer)
+        filler.fill_input_field(element="group_name", text=group.name)
+        filler.fill_input_field(element="group_header", text=group.header)
+        filler.fill_input_field(element="group_footer", text=group.footer)
         # Отправляем форму группы
         wd.find_element_by_name("update").click()
         self.open_group_page()
