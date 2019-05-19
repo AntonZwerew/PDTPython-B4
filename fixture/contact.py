@@ -48,7 +48,6 @@ class ContactHelper:
     def delete_first(self):
         wd = self.app.wd
         self.open_main_page()
-        self.create_if_none()
         wd.find_element_by_name("selected[]").click()
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
@@ -57,7 +56,6 @@ class ContactHelper:
         wd = self.app.wd
         filler = self.app.filler
         self.open_main_page()
-        self.create_if_none()
         wd.find_element_by_xpath("//img[@alt='Edit']").click()
         filler.fill_input_field(element="firstname", text=contact.first_name)
         filler.fill_input_field(element="middlename", text=contact.middle_name)
