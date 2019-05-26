@@ -14,9 +14,13 @@ class ContactHelper:
 
     def add(self, contact):
         wd = self.app.wd
-        filler = self.app.filler
         self.open_main_page()
         wd.find_element_by_link_text("add new").click()
+        self.fill_contact(contact=contact)
+        wd.find_element_by_name("submit").click()
+
+    def fill_contact(self, contact):
+        filler = self.app.filler
         filler.fill_input_field(element="firstname", text=contact.first_name)
         filler.fill_input_field(element="middlename", text=contact.middle_name)
         filler.fill_input_field(element="lastname", text=contact.last_name)
@@ -39,11 +43,9 @@ class ContactHelper:
         filler.fill_dropdown_list(element="aday", text=contact.aday_day)
         filler.fill_dropdown_list(element="amonth", text=contact.aday_month)
         filler.fill_input_field(element="ayear", text=contact.aday_year)
-        filler.fill_dropdown_list(element="new_group", text=contact.group)
         filler.fill_input_field(element="address2", text=contact.address2)
         filler.fill_input_field(element="phone2", text=contact.phone2)
         filler.fill_input_field(element="notes", text=contact.notes)
-        wd.find_element_by_name("submit").click()
 
     def delete_first(self):
         wd = self.app.wd
@@ -54,34 +56,9 @@ class ContactHelper:
 
     def edit_first(self, contact):
         wd = self.app.wd
-        filler = self.app.filler
         self.open_main_page()
         wd.find_element_by_xpath("//img[@alt='Edit']").click()
-        filler.fill_input_field(element="firstname", text=contact.first_name)
-        filler.fill_input_field(element="middlename", text=contact.middle_name)
-        filler.fill_input_field(element="lastname", text=contact.last_name)
-        filler.fill_input_field(element="nickname", text=contact.nickname)
-        filler.fill_photo_field(element="photo", text=contact.photo)
-        filler.fill_input_field(element="title", text=contact.title)
-        filler.fill_input_field(element="company", text=contact.company)
-        filler.fill_input_field(element="address", text=contact.address1)
-        filler.fill_input_field(element="home", text=contact.phone_home)
-        filler.fill_input_field(element="mobile", text=contact.phone_mobile)
-        filler.fill_input_field(element="work", text=contact.phone_work)
-        filler.fill_input_field(element="fax", text=contact.phone_fax)
-        filler.fill_input_field(element="email", text=contact.email1)
-        filler.fill_input_field(element="email2", text=contact.email2)
-        filler.fill_input_field(element="email3", text=contact.email3)
-        filler.fill_input_field(element="homepage", text=contact.homepage)
-        filler.fill_dropdown_list(element="bday", text=contact.bday_day)
-        filler.fill_dropdown_list(element="bmonth", text=contact.bday_month)
-        filler.fill_input_field(element="byear", text=contact.bday_year)
-        filler.fill_dropdown_list(element="aday", text=contact.aday_day)
-        filler.fill_dropdown_list(element="amonth", text=contact.aday_month)
-        filler.fill_input_field(element="ayear", text=contact.aday_year)
-        filler.fill_input_field(element="address2", text=contact.address2)
-        filler.fill_input_field(element="phone2", text=contact.phone2)
-        filler.fill_input_field(element="notes", text=contact.notes)
+        self.fill_contact(contact=contact)
         wd.find_element_by_name("update").click()
 
     def count(self):

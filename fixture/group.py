@@ -7,27 +7,26 @@ class GroupHelper:
 
     def submit_group(self, group):
         wd = self.app.wd
-        filler = self.app.filler
         wd.find_element_by_name("new").click()
-        # Заполняем форму новой группы
-        filler.fill_input_field(element="group_name", text=group.name)
-        filler.fill_input_field(element="group_header", text=group.header)
-        filler.fill_input_field(element="group_footer", text=group.footer)
+        self.fill_group(group=group)
         # Отправляем форму группы
         wd.find_element_by_name("submit").click()
         self.open_group_page()
 
-    def edit_group(self, group):
-        wd = self.app.wd
+    def fill_group(self, group):
         filler = self.app.filler
-        # Выбираем первую группу
-        wd.find_element_by_name("selected[]").click()
-        # Жмем на кнопку "редактировать"
-        wd.find_element_by_name("edit").click()
         # Заполняем форму новой группы
         filler.fill_input_field(element="group_name", text=group.name)
         filler.fill_input_field(element="group_header", text=group.header)
         filler.fill_input_field(element="group_footer", text=group.footer)
+
+    def edit_group(self, group):
+        wd = self.app.wd
+        # Выбираем первую группу
+        wd.find_element_by_name("selected[]").click()
+        # Жмем на кнопку "редактировать"
+        wd.find_element_by_name("edit").click()
+        self.fill_group(group=group)
         # Отправляем форму группы
         wd.find_element_by_name("update").click()
         self.open_group_page()
@@ -61,3 +60,13 @@ class GroupHelper:
     def create_if_none(self):
         if self.count() == 0:
             self.submit_group(Group(name="test", header="test", footer="test"))
+
+    def get_list(self):
+        wd = self.app.wd
+        self.open_group_page()
+        groups = []
+        for element in wd.find_elements_by_css_selector("span.group"):
+            group_name = element.text
+            group_id = element.find_element_by_name("selected[]").get_attribute("value")
+            groups.append(Group(name=group_name, group_id=group_id))
+        return groups
