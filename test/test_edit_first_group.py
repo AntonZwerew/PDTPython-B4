@@ -8,6 +8,6 @@ def test_edit_first_group(app):
     edited_group.id = groups_before[0].id
     app.group.edit_first(edited_group)
     gropus_after = app.group.get_list()
-    assert len(groups_before) == len(gropus_after)
+    assert len(groups_before) == app.group.count()
     groups_before[0] = edited_group
     assert sorted(groups_before, key=Group.id_or_max) == sorted(gropus_after, key=Group.id_or_max)

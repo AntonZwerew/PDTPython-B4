@@ -11,6 +11,6 @@ def test_adding_contact(app):
     contacts_before = app.contact.get_list()
     app.contact.add(vanya)
     contacts_after = app.contact.get_list()
-    assert len(contacts_before) + 1 == len(contacts_after)
+    assert len(contacts_before) + 1 == app.contact.count()
     contacts_before.append(vanya)
     assert sorted(contacts_before, key=Contact.id_or_max) == sorted(contacts_after, key=Contact.id_or_max)

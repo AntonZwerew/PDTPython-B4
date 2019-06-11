@@ -4,6 +4,6 @@ def test_delete_first_group(app):
     groups_before = app.group.get_list()
     app.group.delete_first()
     groups_after = app.group.get_list()
-    assert len(groups_before) - 1 == len(groups_after)
+    assert len(groups_before) - 1 == app.group.count()
     groups_before[0:1] = []
     assert groups_before == groups_after

@@ -1,9 +1,11 @@
 from model.group import Group
 
 
+
 class GroupHelper:
     def __init__(self, app):
         self.app = app
+        self.group_cache = None
 
     def submit_group(self, group):
         wd = self.app.wd
@@ -34,10 +36,12 @@ class GroupHelper:
     def create(self, group):
         self.open_group_page()
         self.submit_group(group)
+        self.group_cache = None
 
     def edit_first(self, group):
         self.open_group_page()
         self.edit_group(group)
+        self.group_cache = None
 
     def open_group_page(self):
         wd = self.app.wd
@@ -51,6 +55,7 @@ class GroupHelper:
         wd.find_element_by_name("selected[]").click()
         # Удаляем отмеченную группу
         wd.find_element_by_name("delete").click()
+        self.group_cache = None
 
     def count(self):
         wd = self.app.wd
@@ -60,13 +65,16 @@ class GroupHelper:
     def create_if_none(self):
         if self.count() == 0:
             self.submit_group(Group(name="test", header="test", footer="test"))
+            self.group_cache = None
 
     def get_list(self):
-        wd = self.app.wd
-        self.open_group_page()
-        groups = []
-        for element in wd.find_elements_by_css_selector("span.group"):
-            group_name = element.text
-            group_id = element.find_element_by_name("selected[]").get_attribute("value")
-            groups.append(Group(name=group_name, group_id=group_id))
-        return groups
+        group_cache = self.group_cache
+        if group_cache is None:
+            wd = self.app.wd
+            self.open_group_page()
+            group_cache = []
+            for element in wd.find_elements_by_css_selector("span.group"):
+                group_name = element.text
+                group_id = element.find_element_by_name("selected[]").get_attribute("value")
+                group_cache.append(Group(name=group_name, group_id=group_id))
+        return list(group_cache)

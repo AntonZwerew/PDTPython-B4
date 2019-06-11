@@ -2,10 +2,12 @@ from selenium.webdriver.support.ui import Select
 from model.contact import Contact
 
 
+
 class ContactHelper:
 
     def __init__(self, app):
         self.app = app
+        self.contact_cache = None
 
     def open_main_page(self):
         wd = self.app.wd
@@ -53,6 +55,7 @@ class ContactHelper:
         wd.find_element_by_name("selected[]").click()
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
+        self.contact_cache = None
 
     def edit_first(self, contact):
         wd = self.app.wd
@@ -60,6 +63,7 @@ class ContactHelper:
         wd.find_element_by_xpath("//img[@alt='Edit']").click()
         self.fill_contact(contact=contact)
         wd.find_element_by_name("update").click()
+        self.contact_cache = None
 
     def count(self):
         wd = self.app.wd
@@ -74,20 +78,23 @@ class ContactHelper:
                         "NOasdkalsdjhlkasjgdflhajgdshsjld!")
         if self.count() == 0:
             self.add(vanya)
+            self.contact_cache = None
 
     def get_list(self):
-        wd = self.app.wd
-        self.open_main_page()
-        contacts = []
-        for element in wd.find_elements_by_css_selector("[name=entry]"):
-            fields = element.find_elements_by_css_selector("td")
-            contact_id = fields[0].find_element_by_name("selected[]").get_attribute("value")
-            contact_last_name = fields[1].get_attribute("innerText")
-            contact_first_name = fields[2].get_attribute("innerText")
-            contact_address = fields[3].get_attribute("innerText")
-            contacts.append(Contact(first_name=contact_first_name,
-                                    last_name=contact_last_name,
-                                    address1=contact_address,
-                                    contact_id=contact_id))
-        return contacts
+        contact_cache = self.contact_cache
+        if contact_cache is None:
+            wd = self.app.wd
+            self.open_main_page()
+            contact_cache = []
+            for element in wd.find_elements_by_css_selector("[name=entry]"):
+                fields = element.find_elements_by_css_selector("td")
+                contact_id = fields[0].find_element_by_name("selected[]").get_attribute("value")
+                contact_last_name = fields[1].get_attribute("innerText")
+                contact_first_name = fields[2].get_attribute("innerText")
+                contact_address = fields[3].get_attribute("innerText")
+                contact_cache.append(Contact(first_name=contact_first_name,
+                                             last_name=contact_last_name,
+                                             address1=contact_address,
+                                             contact_id=contact_id))
+        return list(contact_cache)
 
