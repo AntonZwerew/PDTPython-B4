@@ -49,18 +49,29 @@ class ContactHelper:
         filler.fill_input_field(element="phone2", text=contact.phone2)
         filler.fill_input_field(element="notes", text=contact.notes)
 
-    def delete_first(self):
+    def select_by_index(self, index):
         wd = self.app.wd
         self.open_main_page()
-        wd.find_element_by_name("selected[]").click()
+        wd.find_elements_by_name("selected[]")[index].click()
+
+    def delete_first(self):
+        self.delete_by_index(0)
+
+    def delete_by_index(self, index):
+        wd = self.app.wd
+        self.open_main_page()
+        self.select_by_index(index)
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
         self.contact_cache = None
 
     def edit_first(self, contact):
+        self.edit_by_index(contact, 0)
+
+    def edit_by_index(self, contact, index):
         wd = self.app.wd
         self.open_main_page()
-        wd.find_element_by_xpath("//img[@alt='Edit']").click()
+        wd.find_elements_by_css_selector("img[alt=Edit]")[index].click()
         self.fill_contact(contact=contact)
         wd.find_element_by_name("update").click()
         self.contact_cache = None

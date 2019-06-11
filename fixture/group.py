@@ -1,7 +1,6 @@
 from model.group import Group
 
 
-
 class GroupHelper:
     def __init__(self, app):
         self.app = app
@@ -22,10 +21,9 @@ class GroupHelper:
         filler.fill_input_field(element="group_header", text=group.header)
         filler.fill_input_field(element="group_footer", text=group.footer)
 
-    def edit_group(self, group):
+    def edit_group_by_index(self, group, index):
         wd = self.app.wd
-        # Выбираем первую группу
-        wd.find_element_by_name("selected[]").click()
+        self.select_by_index(index)
         # Жмем на кнопку "редактировать"
         wd.find_element_by_name("edit").click()
         self.fill_group(group=group)
@@ -40,7 +38,7 @@ class GroupHelper:
 
     def edit_first(self, group):
         self.open_group_page()
-        self.edit_group(group)
+        self.edit_group_by_index(group=group, index=0)
         self.group_cache = None
 
     def open_group_page(self):
@@ -48,11 +46,17 @@ class GroupHelper:
         if not (wd.current_url.endswith("/group.php") and len(wd.find_elements_by_name("new")) > 0):
             wd.find_element_by_link_text("groups").click()
 
+    def select_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_name("selected[]")[index].click()
+
     def delete_first(self):
+        self.delete_by_index(0)
+
+    def delete_by_index(self, index):
         wd = self.app.wd
         self.open_group_page()
-        # Отмечаем первую группу
-        wd.find_element_by_name("selected[]").click()
+        self.select_by_index(index)
         # Удаляем отмеченную группу
         wd.find_element_by_name("delete").click()
         self.group_cache = None
