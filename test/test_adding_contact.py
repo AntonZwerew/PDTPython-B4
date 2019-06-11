@@ -8,4 +8,9 @@ def test_adding_contact(app):
                   "++7788000055555533553355", "vanya@fsb.ru", "ivan@kgb.su", "Ivanych@ivan.ivan", "google.ru", "15",
                   "November", "2001", "13", "November", "1999", "Name1", "AaddrreesS", "Yjme",
                   "NOasdkalsdjhlkasjgdflhajgdshsjld!")
+    contacts_before = app.contact.get_list()
     app.contact.add(vanya)
+    contacts_after = app.contact.get_list()
+    assert len(contacts_before) + 1 == len(contacts_after)
+    contacts_before.append(vanya)
+    assert sorted(contacts_before, key=Contact.id_or_max) == sorted(contacts_after, key=Contact.id_or_max)

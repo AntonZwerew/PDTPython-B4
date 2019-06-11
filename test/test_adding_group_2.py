@@ -4,15 +4,19 @@ from model.group import Group
 
 def test_adding_group(app):
     group = Group("Name1", "Header1", "Footer1")
-    gropus_before = app.group.get_list()
+    groups_before = app.group.get_list()
     app.group.create(group)
-    gropus_after = app.group.get_list()
-    assert len(gropus_before) + 1 == len(gropus_after)
+    groups_after = app.group.get_list()
+    assert len(groups_before) + 1 == len(groups_after)
+    groups_before.append(group)
+    assert sorted(groups_before, key=Group.id_or_max) == sorted(groups_after, key=Group.id_or_max)
 
 
 def test_adding_empty_group(app):
-    emtpy_group = Group("", "", "")
-    gropus_before = app.group.get_list()
-    app.group.create(emtpy_group)
-    gropus_after = app.group.get_list()
-    assert len(gropus_before) + 1 == len(gropus_after)
+    empty_group = Group("", "", "")
+    groups_before = app.group.get_list()
+    app.group.create(empty_group)
+    groups_after = app.group.get_list()
+    assert len(groups_before) + 1 == len(groups_after)
+    groups_before.append(empty_group)
+    assert sorted(groups_before, key=Group.id_or_max) == sorted(groups_after, key=Group.id_or_max)

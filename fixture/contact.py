@@ -75,3 +75,19 @@ class ContactHelper:
         if self.count() == 0:
             self.add(vanya)
 
+    def get_list(self):
+        wd = self.app.wd
+        self.open_main_page()
+        contacts = []
+        for element in wd.find_elements_by_css_selector("[name=entry]"):
+            fields = element.find_elements_by_css_selector("td")
+            contact_id = fields[0].find_element_by_name("selected[]").get_attribute("value")
+            contact_last_name = fields[1].get_attribute("innerText")
+            contact_first_name = fields[2].get_attribute("innerText")
+            contact_address = fields[3].get_attribute("innerText")
+            contacts.append(Contact(first_name=contact_first_name,
+                                    last_name=contact_last_name,
+                                    address1=contact_address,
+                                    contact_id=contact_id))
+        return contacts
+
