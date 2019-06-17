@@ -1,11 +1,14 @@
+# -*- coding: utf-8 -*-
+
 from sys import maxsize
+
 
 class Contact():
     def __init__(self, first_name=None, middle_name=None, last_name=None, nickname=None, photo=None, title=None,
                  company=None, address1=None, phone_home=None, phone_mobile=None, phone_work=None, phone_fax=None,
                  email1=None, email2=None, email3=None, homepage=None, bday_day=None, bday_month=None, bday_year=None,
                  aday_day=None, aday_month=None, aday_year=None, group=None, address2=None, phone2=None, notes=None,
-                 contact_id=None):
+                 contact_id=None, all_phones_from_homepage=None, all_emails_from_homepage=None):
         self.first_name = first_name
         self.middle_name = middle_name
         self.last_name = last_name
@@ -33,6 +36,8 @@ class Contact():
         self.phone2 = phone2
         self.notes = notes
         self.id = contact_id
+        self.all_phones_from_homepage = all_phones_from_homepage
+        self.all_emails_from_homepage = all_emails_from_homepage
 
     def __repr__(self):
         return "%s:%s:%s:%s" % (self.id, self.first_name, self.last_name, self.address1)
@@ -40,8 +45,7 @@ class Contact():
     def __eq__(self, other):
         eq = (self.id == other.id or self.id is None or other.id is None) and (
               self.first_name == other.first_name) and (
-              self.last_name == other.last_name) and (
-              self.address1 == other.address1)
+              self.last_name == other.last_name)
         return eq
 
     def id_or_max(self):

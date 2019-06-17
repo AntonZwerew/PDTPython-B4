@@ -1,6 +1,6 @@
 from selenium.webdriver.support.ui import Select
 from model.contact import Contact
-
+import re
 
 
 class ContactHelper:
@@ -70,11 +70,20 @@ class ContactHelper:
 
     def edit_by_index(self, contact, index):
         wd = self.app.wd
-        self.open_main_page()
-        wd.find_elements_by_css_selector("img[alt=Edit]")[index].click()
+        self.open_to_edit_by_index(index)
         self.fill_contact(contact=contact)
         wd.find_element_by_name("update").click()
         self.contact_cache = None
+
+    def view_by_index(self, index):
+        wd = self.app.wd
+        self.open_main_page()
+        wd.find_elements_by_css_selector("img[alt=Details]")[index].click()
+
+    def open_to_edit_by_index(self, index):
+        wd = self.app.wd
+        self.open_main_page()
+        wd.find_elements_by_css_selector("img[alt=Edit]")[index].click()
 
     def count(self):
         wd = self.app.wd
@@ -103,9 +112,54 @@ class ContactHelper:
                 contact_last_name = fields[1].get_attribute("innerText")
                 contact_first_name = fields[2].get_attribute("innerText")
                 contact_address = fields[3].get_attribute("innerText")
+                contact_phones = fields[5].get_attribute("innerText")# .splitlines()
+                contact_emails = fields[4].get_attribute("innerText")
                 contact_cache.append(Contact(first_name=contact_first_name,
                                              last_name=contact_last_name,
                                              address1=contact_address,
-                                             contact_id=contact_id))
+                                             contact_id=contact_id,
+                                             all_phones_from_homepage=contact_phones,
+                                             all_emails_from_homepage=contact_emails))
         return list(contact_cache)
 
+    def get_contact_info_from_edit_page(self, index):
+        wd = self.app.wd
+        self.open_to_edit_by_index(index)
+        id = wd.find_element_by_name("id").get_attribute("value")
+        firstname = wd.find_element_by_name("firstname").get_attribute("value")
+        lastname = wd.find_element_by_name("lastname").get_attribute("value")
+        address = wd.find_element_by_name("address").get_attribute("value")
+        homephone = wd.find_element_by_name("home").get_attribute("value")
+        workphone = wd.find_element_by_name("work").get_attribute("value")
+        mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
+        fax = wd.find_element_by_name("fax").get_attribute("value")
+        phone2 = wd.find_element_by_name("phone2").get_attribute("value")
+        email1 = wd.find_element_by_name("email").get_attribute("value")
+        email2 = wd.find_element_by_name("email2").get_attribute("value")
+        email3 = wd.find_element_by_name("email3").get_attribute("value")
+        contact = Contact(first_name=firstname,
+                          last_name=lastname,
+                          contact_id=id,
+                          address1=address,
+                          phone_home=homephone,
+                          phone_work=workphone,
+                          phone_mobile=mobilephone,
+                          phone_fax=fax,
+                          phone2=phone2,
+                          email1=email1,
+                          email2=email2,
+                          email3=email3)
+        return contact
+
+    def get_contact_info_from_view_page(self,index):
+        wd = self.app.wd
+        self.view_by_index(index)
+        contact_text = wd.find_element_by_id("content").text
+        phone_home = re.search("H: (.*)", contact_text).group(1)
+        phone_work = re.search("W: (.*)", contact_text).group(1)
+        phone_mobile = re.search("M: (.*)", contact_text).group(1)
+        phone2 = re.search("P: (.*)", contact_text).group(1)
+        return Contact(phone_home=phone_home,
+                       phone_work=phone_work,
+                       phone_mobile=phone_mobile,
+                       phone2=phone2)

@@ -9,5 +9,5 @@ def test_delete_rand_contact(app):
     app.contact.delete_by_index(index)
     contacts_after = app.contact.get_list()
     assert len(contacts_before) - 1 == app.contact.count()
-    contacts_before[0:1] = []
+    contacts_before[index:index+1] = []
     assert contacts_before == contacts_after

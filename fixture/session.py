@@ -32,16 +32,19 @@ class SessionHelper:
             return False
 
     def is_logged_in_as(self, username):
+        return username==self.get_username()
+
+    def get_username(self):
         wd = self.app.wd
-        return wd.find_element_by_xpath("//div[@id='top']/form/b").text == "(" + username + ")"
+        return wd.find_element_by_xpath("//div[@id='top']/form/b").text[1:-1]
 
     def ensure_login(self, username, password):
-        if self.is_logged_in():
-            if self.is_logged_in_as(username):
-                return
-            else:
-                self.logout()
-        self.login(username, password)
+      if self.is_logged_in():
+          if self.is_logged_in_as(username):
+              return
+          else:
+              self.logout()
+      self.login(username, password)
 
     def ensure_logout(self):
         if self.is_logged_in():
