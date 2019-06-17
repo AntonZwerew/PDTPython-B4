@@ -12,7 +12,7 @@ class ContactHelper:
     def open_main_page(self):
         wd = self.app.wd
         if not (wd.current_url.endswith("/index.php") and len(wd.find_elements_by_link_text("All e-mail")) > 0):
-            wd.get("http://localhost/addressbook/")
+            wd.get(self.app.base_url)
 
     def add(self, contact):
         wd = self.app.wd
