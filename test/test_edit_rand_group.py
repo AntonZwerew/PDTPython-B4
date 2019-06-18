@@ -2,8 +2,8 @@ from model.group import Group
 from random import randrange
 
 
-def test_edit_rand_group(app):
-    edited_group = Group("Name2", "Header2", "Footer2")
+def test_edit_rand_group(app, json_group):
+    edited_group = json_group
     app.group.create_if_none()
     groups_before = app.group.get_list()
     index = randrange(0, len(groups_before))
