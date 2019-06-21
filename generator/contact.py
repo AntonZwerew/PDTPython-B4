@@ -30,9 +30,11 @@ def random_string(prefix, maxlen):
     symbols = string.ascii_letters + string.digits + '''string.punctuation''' + " "*10
     return prefix + "".join([random.choice(symbols) for i in range(0, maxlen)])
 
+
 def random_phone(maxlen):
     phone = '''string.ascii_letters''' + string.digits + string.punctuation + " "
     return "".join([random.choice(phone) for i in range(0, maxlen)])
+
 
 def random_day():
     return str(random.randrange(1,31))
@@ -64,7 +66,6 @@ testdata = [
             email2="",
             email3="",
             homepage="",
-            bday_day="",
             address2="",
             phone2="",
             notes="")

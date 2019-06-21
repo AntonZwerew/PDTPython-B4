@@ -33,7 +33,7 @@ class SessionHelper:
             return False
 
     def is_logged_in_as(self, username):
-        return username==self.get_username()
+        return username == self.get_username()
 
     def get_username(self):
         wd = self.app.wd

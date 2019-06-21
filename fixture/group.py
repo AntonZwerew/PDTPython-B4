@@ -31,6 +31,16 @@ class GroupHelper:
         wd.find_element_by_name("update").click()
         self.open_group_page()
 
+    def edit_group_by_id(self, group, id):
+        wd = self.app.wd
+        self.select_by_id(id)
+        # Жмем на кнопку "редактировать"
+        wd.find_element_by_name("edit").click()
+        self.fill_group(group=group)
+        # Отправляем форму группы
+        wd.find_element_by_name("update").click()
+        self.open_group_page()
+
     def create(self, group):
         self.open_group_page()
         self.submit_group(group)
@@ -50,6 +60,10 @@ class GroupHelper:
         wd = self.app.wd
         wd.find_elements_by_name("selected[]")[index].click()
 
+    def select_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+
     def delete_first(self):
         self.delete_by_index(0)
 
@@ -57,6 +71,14 @@ class GroupHelper:
         wd = self.app.wd
         self.open_group_page()
         self.select_by_index(index)
+        # Удаляем отмеченную группу
+        wd.find_element_by_name("delete").click()
+        self.group_cache = None
+
+    def delete_by_id(self, id):
+        wd = self.app.wd
+        self.open_group_page()
+        self.select_by_id(id)
         # Удаляем отмеченную группу
         wd.find_element_by_name("delete").click()
         self.group_cache = None

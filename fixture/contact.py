@@ -1,4 +1,3 @@
-from selenium.webdriver.support.ui import Select
 from model.contact import Contact
 import re
 
@@ -27,7 +26,8 @@ class ContactHelper:
         filler.fill_input_field(element="middlename", text=contact.middle_name)
         filler.fill_input_field(element="lastname", text=contact.last_name)
         filler.fill_input_field(element="nickname", text=contact.nickname)
-        filler.fill_photo_field(element="photo", text=contact.photo)
+        if contact.photo:
+            filler.fill_photo_field(element="photo", text=contact.photo)
         filler.fill_input_field(element="title", text=contact.title)
         filler.fill_input_field(element="company", text=contact.company)
         filler.fill_input_field(element="address", text=contact.address1)
@@ -39,12 +39,18 @@ class ContactHelper:
         filler.fill_input_field(element="email2", text=contact.email2)
         filler.fill_input_field(element="email3", text=contact.email3)
         filler.fill_input_field(element="homepage", text=contact.homepage)
-        filler.fill_dropdown_list(element="bday", text=contact.bday_day)
-        filler.fill_dropdown_list(element="bmonth", text=contact.bday_month)
-        filler.fill_input_field(element="byear", text=contact.bday_year)
-        filler.fill_dropdown_list(element="aday", text=contact.aday_day)
-        filler.fill_dropdown_list(element="amonth", text=contact.aday_month)
-        filler.fill_input_field(element="ayear", text=contact.aday_year)
+        if contact.bday_day:
+            filler.fill_dropdown_list(element="bday", text=contact.bday_day)
+        if contact.bday_month:
+            filler.fill_dropdown_list(element="bmonth", text=contact.bday_month)
+        if contact.bday_year:
+            filler.fill_input_field(element="byear", text=contact.bday_year)
+        if contact.aday_day:
+            filler.fill_dropdown_list(element="aday", text=contact.aday_day)
+        if contact.aday_month:
+            filler.fill_dropdown_list(element="amonth", text=contact.aday_month)
+        if contact.aday_year:
+            filler.fill_input_field(element="ayear", text=contact.aday_year)
         filler.fill_input_field(element="address2", text=contact.address2)
         filler.fill_input_field(element="phone2", text=contact.phone2)
         filler.fill_input_field(element="notes", text=contact.notes)
@@ -53,6 +59,10 @@ class ContactHelper:
         wd = self.app.wd
         self.open_main_page()
         wd.find_elements_by_name("selected[]")[index].click()
+
+    def select_by_id(self, contact_id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % contact_id).click()
 
     def delete_first(self):
         self.delete_by_index(0)
@@ -63,6 +73,16 @@ class ContactHelper:
         self.select_by_index(index)
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
+        self.contact_cache = None
+
+    def delete_by_id(self, contact_id):
+        wd = self.app.wd
+        self.open_main_page()
+        self.select_by_id(contact_id)
+        # Удаляем отмеченную группу
+        wd.find_element_by_xpath("//input[@value='Delete']").click()
+        wd.switch_to_alert().accept()
+        wd.find_element_by_css_selector("div.msgbox")
         self.contact_cache = None
 
     def edit_first(self, contact):
