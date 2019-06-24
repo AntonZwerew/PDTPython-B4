@@ -1,3 +1,4 @@
+from selenium.webdriver.support.ui import Select
 from model.contact import Contact
 import re
 
@@ -74,6 +75,19 @@ class ContactHelper:
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
         self.contact_cache = None
+
+    def add_to_group(self, contact, group):
+        wd = self.app.wd
+        self.select_by_id(contact.id)
+        Select(wd.find_element_by_name("to_group")).select_by_value(group.id)
+        # wd.find_element_by_name("to_group").click()
+        wd.find_element_by_name("add").click()
+        wd.find_element_by_class_name("msgbox")
+
+    def view_by_group(self, group):
+        wd = self.app.wd
+        Select(wd.find_element_by_name("group")).select_by_value(group.id)
+        wd.find_element_by_name("group").click()
 
     def delete_by_id(self, contact_id):
         wd = self.app.wd

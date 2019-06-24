@@ -2,13 +2,13 @@ import random
 from model.group import Group
 
 
-def test_delete_rand_group(app, db, check_ui):
+def test_delete_rand_group(app, orm, check_ui):
     if db.count_groups() == 0:
         app.group.create(Group(name="123"))
-    groups_before = db.get_group_list()
+    groups_before = orm.get_group_list()
     group = random.choice(groups_before)
     app.group.delete_by_id(group.id)
-    groups_after = db.get_group_list()
+    groups_after = orm.get_group_list()
     groups_before.remove(group)
     assert groups_before == groups_after
     if check_ui:
