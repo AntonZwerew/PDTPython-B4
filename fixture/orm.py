@@ -23,8 +23,16 @@ class ORMFixture:
         lastname = Optional(str, column="lastname")
         # deprecated = Optional(datetime, column="deprecated")
         deprecated = Optional(str, column="deprecated")
+        phone_home = Optional(str, column="home")
+        phone_mobile = Optional(str, column="mobile")
+        phone_work = Optional(str, column="work")
+        phone2 = Optional(str, column="phone2")
+        address1 = Optional(str, column="address")
+        email1 = Optional(str, column="email")
+        email2 = Optional(str, column="email2")
+        email3 = Optional(str, column="email3")
         # Оставил deprecated строкой, т.к. почему-то python не может перевести строку в datetime, в том числе описанным
-        # в уроке способом. Как я понял из Инфтернета - может быть своязано с локалью (у меня по умолчанию датавремя
+        # в уроке способом. Как я понял из Интернета - может быть своязано с локалью (у меня по умолчанию датавремя
         # Пт июн 21 19:42:06 MSK 2019. Вручную приветсти строку deprecated в время так же не сумел.
         groups = Set(lambda: ORMFixture.Group, table="address_in_groups", column="group_id", reverse="contacts", lazy=True)
 
@@ -47,6 +55,28 @@ class ORMFixture:
             return Contact(contact_id=str(contact.id), first_name=contact.firstname, last_name=contact.lastname)
         return list(map(convert, contacts))
 
+    def convert_contacts_phones_to_model(self, contacts):
+        def convert(contact):
+            return Contact(contact_id=str(contact.id), first_name=contact.firstname, last_name=contact.lastname,
+                           phone_home=contact.phone_home,
+                           phone_mobile=contact.phone_mobile,
+                           phone_work=contact.phone_work,
+                           phone2=contact.phone2)
+        return list(map(convert, contacts))
+
+    def convert_contacts_homepage_to_model(self, contacts):
+        def convert(contact):
+            return Contact(contact_id=str(contact.id), first_name=contact.firstname, last_name=contact.lastname,
+                           phone_home=contact.phone_home,
+                           phone_mobile=contact.phone_mobile,
+                           phone_work=contact.phone_work,
+                           phone2=contact.phone2,
+                           address1=contact.address1,
+                           email1=contact.email1,
+                           email2=contact.email2,
+                           email3=contact.email3)
+        return list(map(convert, contacts))
+
     @db_session
     def get_group_list(self):
         return self.convert_groups_to_model(select(g for g in ORMFixture.Group))
@@ -57,6 +87,16 @@ class ORMFixture:
                                                      if c.deprecated == "0000-00-00 00:00:00"))
                                                      # if c.deprecated is None))
 
+    @db_session
+    def get_contact_list_with_phones(self):
+        return self.convert_contacts_phones_to_model(select(c for c in ORMFixture.Contact
+                                                     if c.deprecated == "0000-00-00 00:00:00"))
+        # if c.deprecated is None))
+
+    @db_session
+    def get_contact_list_homepage(self):
+        return self.convert_contacts_homepage_to_model(select(c for c in ORMFixture.Contact
+                                                            if c.deprecated == "0000-00-00 00:00:00"))
     @db_session
     def get_contacts_in_group(self, group):
         orm_group = list(select(g for g in ORMFixture.Group if g.id == group.id))[0]

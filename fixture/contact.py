@@ -189,10 +189,22 @@ class ContactHelper:
         wd = self.app.wd
         self.view_by_index(index)
         contact_text = wd.find_element_by_id("content").text
-        phone_home = re.search("H: (.*)", contact_text).group(1)
-        phone_work = re.search("W: (.*)", contact_text).group(1)
-        phone_mobile = re.search("M: (.*)", contact_text).group(1)
-        phone2 = re.search("P: (.*)", contact_text).group(1)
+        try:
+            phone_home = re.search("H: (.*)", contact_text).group(1)
+        except AttributeError:
+            phone_home = ""
+        try:
+            phone_work = re.search("W: (.*)", contact_text).group(1)
+        except AttributeError:
+            phone_work = ""
+        try:
+            phone_mobile = re.search("M: (.*)", contact_text).group(1)
+        except AttributeError:
+            phone_mobile = ""
+        try:
+            phone2 = re.search("P: (.*)", contact_text).group(1)
+        except AttributeError:
+            phone2 = ""
         return Contact(phone_home=phone_home,
                        phone_work=phone_work,
                        phone_mobile=phone_mobile,
